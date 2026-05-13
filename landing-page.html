@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Regpack — Registration & Payments, Automated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #7AB929;
+    --green-dark: #689f1f;
+    --green-light: #e8f5d4;
+    --green-glow: rgba(122, 185, 41, 0.25);
+    --blue: #1F9FDB;
+    --blue-dark: #1781b5;
+    --blue-light: #e3f3fb;
+    --ink: #0F2942;
+    --ink-soft: #4A5C72;
+    --muted: #7d8ea3;
+    --bg: #ffffff;
+    --bg-soft: #F6F9FC;
+    --bg-dark: #0F2942;
+    --border: #E4ECF3;
+    --shadow-sm: 0 1px 2px rgba(15, 41, 66, 0.06), 0 1px 3px rgba(15, 41, 66, 0.08);
+    --shadow-md: 0 4px 16px rgba(15, 41, 66, 0.08), 0 2px 6px rgba(15, 41, 66, 0.06);
+    --shadow-lg: 0 24px 48px -12px rgba(15, 41, 66, 0.18), 0 8px 16px rgba(15, 41, 66, 0.08);
+    --shadow-glow: 0 12px 32px var(--green-glow);
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    line-height: 1.6;
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 88px;
+  }
+  .logo { display: flex; align-items: center; text-decoration: none; }
+  .logo img { height: 60px; width: auto; display: block; }
+  .footer-brand .logo img { height: 64px; }
+  .nav-links { display: flex; gap: 2px; list-style: none; align-items: center; }
+  .nav-links > li { position: relative; }
+  .nav-links > li > a,
+  .nav-links > li > .nav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .nav-links > li:hover > a,
+  .nav-links > li:hover > .nav-trigger {
+    color: var(--green-dark);
+    background: var(--green-light);
+  }
+  .nav-caret {
+    width: 8px; height: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform 0.2s;
+    opacity: 0.7;
+  }
+  .nav-links > li:hover .nav-caret {
+    transform: rotate(-135deg) translate(0, 0);
+  }
+  .dropdown-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -8px;
+    min-width: 280px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    padding: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+    z-index: 50;
+  }
+  .dropdown-panel::before {
+    content: "";
+    position: absolute;
+    top: -12px; left: 0; right: 0;
+    height: 12px;
+  }
+  .nav-links > li:hover .dropdown-panel,
+  .nav-links > li:focus-within .dropdown-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .dropdown-heading-icon {
+    width: 38px; height: 38px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .dropdown-heading-icon svg { width: 20px; height: 20px; }
+  .dropdown-heading a {
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    transition: color 0.15s;
+  }
+  .dropdown-heading a:hover { color: var(--green); }
+  .dropdown-list { list-style: none; }
+  .dropdown-list a {
+    display: block;
+    padding: 9px 12px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.92rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+  }
+  .dropdown-list a:hover {
+    background: var(--green-light);
+    color: var(--green-dark);
+  }
+  .nav-cta { display: flex; gap: 12px; align-items: center; }
+  @media (max-width: 1024px) { .nav-links { display: none; } }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 14px 24px;
+    border-radius: var(--radius);
+    font-weight: 600; font-size: 0.98rem;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    font-family: inherit; white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--green); color: white;
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-primary:hover {
+    background: var(--green-dark); transform: translateY(-1px);
+    box-shadow: 0 16px 36px var(--green-glow);
+  }
+  .btn-ghost {
+    background: transparent; color: var(--ink);
+    border: 1.5px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--ink); }
+  .btn-link {
+    color: var(--ink); background: transparent; padding: 14px 8px;
+  }
+  .btn-link:hover { color: var(--green); }
+  .btn-lg { padding: 18px 32px; font-size: 1.05rem; }
+
+  /* ============ HERO ============ */
+  .hero { position: relative; padding: 80px 0 100px; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute;
+    top: -200px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--green-glow), transparent 65%);
+    z-index: 0;
+  }
+  .hero::after {
+    content: ""; position: absolute;
+    top: 100px; left: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(31, 159, 219, 0.15), transparent 65%);
+    z-index: 0;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px; align-items: center;
+    position: relative; z-index: 1;
+  }
+  @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    background: var(--green-light); color: var(--green-dark);
+    border-radius: 100px;
+    font-weight: 600; font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+  .pill-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.6); opacity: 0.6; }
+  }
+
+  h1.hero-title {
+    font-size: clamp(2.3rem, 4.8vw, 3.6rem);
+    line-height: 1.08; letter-spacing: -0.025em;
+    font-weight: 800; color: var(--ink);
+    margin-bottom: 24px;
+  }
+  h1.hero-title .accent { color: var(--blue); position: relative; white-space: nowrap; }
+  h1.hero-title .accent::after {
+    content: ""; position: absolute;
+    left: 0; right: 0; bottom: 2px; height: 8px;
+    background: var(--green-light); z-index: -1; border-radius: 4px;
+  }
+
+  .hero-sub {
+    font-size: 1.18rem; color: var(--ink-soft);
+    margin-bottom: 36px; max-width: 540px; line-height: 1.6;
+  }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+
+  /* Google review trust signal in hero */
+  .trust-google {
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 12px 20px;
+    background: white; border: 1px solid var(--border);
+    border-radius: 100px; box-shadow: var(--shadow-sm);
+  }
+  .google-g {
+    width: 28px; height: 28px;
+    background: white;
+    border-radius: 50%;
+    display: grid; place-items: center;
+  }
+  .google-g svg { width: 22px; height: 22px; }
+  .trust-stars {
+    color: #f59e0b; letter-spacing: 1px;
+    font-size: 0.95rem;
+  }
+  .trust-text { font-size: 0.88rem; color: var(--ink-soft); font-weight: 500; }
+  .trust-text b { color: var(--ink); font-weight: 700; }
+
+  /* ============ HERO MOCKUP ============ */
+  .hero-mock { position: relative; perspective: 1500px; }
+  .mock-window {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transform: rotateY(-4deg) rotateX(2deg);
+    transition: transform 0.4s ease;
+  }
+  .mock-window:hover { transform: rotateY(-2deg) rotateX(1deg); }
+  .mock-header {
+    background: var(--bg-soft); padding: 12px 16px;
+    display: flex; gap: 6px; border-bottom: 1px solid var(--border);
+  }
+  .mock-dot { width: 12px; height: 12px; border-radius: 50%; background: #e6e9ee; }
+  .mock-dot:nth-child(1) { background: #ff5f57; }
+  .mock-dot:nth-child(2) { background: #ffbd2e; }
+  .mock-dot:nth-child(3) { background: #28c940; }
+  .mock-body { padding: 24px; }
+  .mock-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+  }
+  .mock-row:last-child { border-bottom: none; }
+  .mock-user { display: flex; align-items: center; gap: 12px; }
+  .mock-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    display: grid; place-items: center;
+    color: white; font-weight: 700; font-size: 0.85rem;
+  }
+  .mock-name { font-weight: 600; font-size: 0.95rem; }
+  .mock-meta { color: var(--muted); font-size: 0.82rem; }
+  .mock-status {
+    padding: 4px 10px; border-radius: 100px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .status-paid { background: var(--green-light); color: var(--green-dark); }
+  .status-pending { background: #fff4d6; color: #b45309; }
+  .status-active { background: var(--blue-light); color: var(--blue-dark); }
+
+  .mock-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-bottom: 20px;
+  }
+  .stat-card { background: var(--bg-soft); border-radius: var(--radius); padding: 14px; }
+  .stat-card .v { font-weight: 800; font-size: 1.2rem; color: var(--ink); }
+  .stat-card .l { color: var(--muted); font-size: 0.78rem; }
+  .stat-card.green { background: var(--green-light); }
+  .stat-card.green .v { color: var(--green-dark); }
+  .stat-card.blue { background: var(--blue-light); }
+  .stat-card.blue .v { color: var(--blue-dark); }
+
+  .float-badge {
+    position: absolute; background: white;
+    border-radius: var(--radius); box-shadow: var(--shadow-md);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.9rem; font-weight: 600;
+    animation: float 6s ease-in-out infinite;
+  }
+  .float-badge.fb1 { top: -20px; left: -30px; color: var(--green-dark); animation-delay: 0s; }
+  .float-badge.fb2 { bottom: 30px; right: -40px; color: var(--blue-dark); animation-delay: 1.5s; }
+  .badge-icon {
+    width: 28px; height: 28px;
+    background: var(--green-light); border-radius: 8px;
+    display: grid; place-items: center;
+    color: var(--green-dark);
+  }
+  .float-badge.fb2 .badge-icon { background: var(--blue-light); color: var(--blue-dark); }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @media (max-width: 960px) {
+    .float-badge { display: none; }
+    .mock-window { transform: none; }
+  }
+
+  /* ============ LOGO MARQUEE ============ */
+  .logos {
+    padding: 56px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-soft);
+    overflow: hidden;
+  }
+  .logos-title {
+    text-align: center; color: var(--muted);
+    font-size: 0.92rem; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 600;
+    margin-bottom: 36px;
+  }
+  .logo-marquee {
+    position: relative;
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+  .logo-track {
+    display: flex; gap: 56px; align-items: center;
+    width: max-content;
+    animation: scroll-x 60s linear infinite;
+  }
+  .logo-marquee:hover .logo-track { animation-play-state: paused; }
+  @keyframes scroll-x {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .logo-track img {
+    height: 56px; width: auto; max-width: 180px;
+    object-fit: contain;
+    flex-shrink: 0;
+    opacity: 0.55;
+    filter: grayscale(100%);
+    transition: opacity 0.25s, filter 0.25s;
+  }
+  .logo-track img:hover { opacity: 1; filter: grayscale(0%); }
+
+  /* ============ SECTIONS ============ */
+  section.section { padding: 100px 0; }
+  @media (max-width: 768px) { section.section { padding: 64px 0; } }
+
+  .section-head { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .eyebrow {
+    color: var(--green); font-weight: 700;
+    font-size: 0.88rem; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  h2 {
+    font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+    line-height: 1.15; font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 18px;
+  }
+  .section-head p { color: var(--ink-soft); font-size: 1.12rem; line-height: 1.6; }
+
+  /* ============ FEATURES ============ */
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  @media (max-width: 900px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 32px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .feature:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg); border-color: transparent;
+  }
+  .feature::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, var(--green-light) 200%);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none;
+  }
+  .feature:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 56px; height: 56px;
+    background: var(--green-light); color: var(--green-dark);
+    border-radius: var(--radius);
+    display: grid; place-items: center;
+    margin-bottom: 20px; position: relative; z-index: 1;
+  }
+  .feature:nth-child(2) .feature-icon { background: var(--blue-light); color: var(--blue-dark); }
+  .feature h3 {
+    font-size: 1.25rem; margin-bottom: 12px;
+    font-weight: 700; position: relative; z-index: 1;
+  }
+  .feature p { color: var(--ink-soft); line-height: 1.6; position: relative; z-index: 1; }
+
+  /* ============ SPLIT FEATURE ============ */
+  .split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center;
+  }
+  .split.reverse .split-text { order: 2; }
+  @media (max-width: 900px) {
+    .split, .split.reverse { grid-template-columns: 1fr; gap: 40px; }
+    .split.reverse .split-text { order: 0; }
+  }
+  .split + .split { margin-top: 100px; }
+  @media (max-width: 768px) { .split + .split { margin-top: 64px; } }
+
+  .split-text h2 { margin-bottom: 20px; }
+  .split-text p { color: var(--ink-soft); font-size: 1.08rem; line-height: 1.7; margin-bottom: 24px; }
+  .check-list { list-style: none; margin-bottom: 28px; }
+  .check-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0; color: var(--ink); font-weight: 500;
+  }
+  .check {
+    flex-shrink: 0; width: 24px; height: 24px;
+    background: var(--green); color: white;
+    border-radius: 50%; display: grid; place-items: center;
+    font-size: 0.8rem; margin-top: 2px;
+  }
+  .split-visual {
+    background: linear-gradient(135deg, var(--bg-soft), white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+  }
+  .visual-card {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 20px; margin-bottom: 16px;
+  }
+  .visual-card:last-child { margin-bottom: 0; }
+  .vc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .vc-label { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+  .vc-amount { font-weight: 800; color: var(--green-dark); font-size: 1.05rem; }
+  .vc-bar { height: 8px; background: var(--bg-soft); border-radius: 100px; overflow: hidden; }
+  .vc-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--blue));
+    border-radius: 100px;
+  }
+  .pulse-dot {
+    display: inline-block;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+
+  /* ============ STATS BAND ============ */
+  .stats-band {
+    background: linear-gradient(135deg, var(--bg-dark), #1a3a5c);
+    color: white; padding: 80px 0;
+    position: relative; overflow: hidden;
+  }
+  .stats-band::before {
+    content: ""; position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(122, 185, 41, 0.2), transparent 60%);
+  }
+  .stats-band::after {
+    content: ""; position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(31, 159, 219, 0.2), transparent 60%);
+  }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 32px; position: relative; z-index: 1;
+  }
+  @media (max-width: 760px) { .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
+  .stat { text-align: center; }
+  .stat-val {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 900; color: var(--green);
+    line-height: 1; margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .stat-label { color: rgba(255, 255, 255, 0.75); font-size: 0.95rem; font-weight: 500; }
+
+  /* ============ TESTIMONIALS ============ */
+  .testimonials { background: var(--bg-soft); }
+  .google-summary {
+    display: inline-flex; align-items: center; gap: 16px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 12px 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .google-summary svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .gs-rating { font-weight: 800; color: var(--ink); font-size: 1rem; }
+  .gs-stars { color: #f59e0b; letter-spacing: 1px; font-size: 0.95rem; }
+  .gs-count { color: var(--ink-soft); font-size: 0.92rem; font-weight: 500; }
+  .gs-count b { color: var(--ink); font-weight: 700; }
+
+  .quote-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  @media (max-width: 900px) { .quote-grid { grid-template-columns: 1fr; } }
+  .quote {
+    background: white; border-radius: var(--radius-lg);
+    padding: 32px; box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .quote-google {
+    position: absolute; top: 24px; right: 24px;
+    width: 22px; height: 22px;
+  }
+  .quote .stars { margin-bottom: 16px; font-size: 1rem; color: #f59e0b; letter-spacing: 1px; }
+  .quote p {
+    color: var(--ink); line-height: 1.7;
+    margin-bottom: 24px; font-size: 1rem; flex: 1;
+  }
+  .quote-author {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 20px; border-top: 1px solid var(--border);
+  }
+  .qa-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    display: grid; place-items: center;
+    color: white; font-weight: 700;
+  }
+  .qa-name { font-weight: 700; color: var(--ink); font-size: 0.95rem; }
+  .qa-title { color: var(--muted); font-size: 0.85rem; }
+
+  /* ============ INDUSTRIES ============ */
+  .industry-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+  }
+  @media (max-width: 900px) { .industry-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 520px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
+  .industry {
+    padding: 24px; background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center; font-weight: 600; color: var(--ink);
+    transition: all 0.2s; cursor: pointer; text-decoration: none;
+  }
+  .industry:hover {
+    border-color: var(--green); background: var(--green-light);
+    color: var(--green-dark); transform: translateY(-2px);
+  }
+  .industry-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+
+  /* ============ PRICING ============ */
+  .pricing-section {
+    background: linear-gradient(180deg, var(--bg-soft) 0%, white 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-section::before {
+    content: ""; position: absolute;
+    top: 60px; left: -100px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, var(--green-glow), transparent 65%);
+  }
+  .pricing-section::after {
+    content: ""; position: absolute;
+    bottom: 60px; right: -100px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(31, 159, 219, 0.15), transparent 65%);
+  }
+  .pricing-banner {
+    text-align: center;
+    margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .pricing-banner-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: white;
+    padding: 8px 18px; border-radius: 100px;
+    font-weight: 700; font-size: 0.92rem;
+    box-shadow: var(--shadow-glow);
+    margin-bottom: 16px;
+  }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; max-width: 1080px; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  @media (max-width: 960px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 460px; }
+  }
+  .price-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 36px 32px;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex; flex-direction: column;
+  }
+  .price-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+  .price-card.featured {
+    border-color: var(--green);
+    background: linear-gradient(180deg, #fafdf6 0%, white 50%);
+    box-shadow: var(--shadow-glow);
+  }
+  @media (min-width: 961px) {
+    .price-card.featured { transform: scale(1.04); }
+    .price-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+  }
+  .price-badge {
+    position: absolute;
+    top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--green); color: white;
+    font-weight: 700; font-size: 0.75rem;
+    padding: 6px 16px; border-radius: 100px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    box-shadow: var(--shadow-glow);
+  }
+  .price-tier {
+    color: var(--ink-soft); font-size: 0.82rem;
+    font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .price-card.featured .price-tier { color: var(--green-dark); }
+  .price-amount { display: flex; align-items: baseline; gap: 3px; margin-bottom: 4px; }
+  .price-currency { font-size: 1.6rem; color: var(--ink); font-weight: 700; }
+  .price-value {
+    font-size: 3.4rem; font-weight: 900;
+    color: var(--ink); letter-spacing: -0.04em; line-height: 1;
+  }
+  .price-period {
+    color: var(--muted); font-size: 0.88rem;
+    margin-bottom: 24px; line-height: 1.4;
+  }
+  .price-features {
+    list-style: none; margin-bottom: 28px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    flex: 1;
+  }
+  .price-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 7px 0; color: var(--ink);
+    font-size: 0.93rem; line-height: 1.5;
+  }
+  .price-features li.bold { font-weight: 700; }
+  .price-features .price-check {
+    flex-shrink: 0; width: 18px; height: 18px;
+    background: var(--green-light); color: var(--green-dark);
+    border-radius: 50%; display: grid; place-items: center;
+    margin-top: 3px;
+  }
+  .price-features .price-check svg { width: 12px; height: 12px; }
+  .price-cta {
+    display: block; width: 100%; padding: 14px;
+    text-align: center; background: white;
+    color: var(--ink); border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    font-weight: 700; text-decoration: none;
+    transition: all 0.2s;
+    font-size: 0.98rem;
+  }
+  .price-cta:hover { background: var(--ink); color: white; }
+  .featured .price-cta {
+    background: var(--green); color: white;
+    border-color: var(--green);
+    box-shadow: var(--shadow-glow);
+  }
+  .featured .price-cta:hover {
+    background: var(--green-dark); border-color: var(--green-dark);
+  }
+  .pricing-footnote {
+    text-align: center; margin-top: 32px;
+    color: var(--ink-soft); font-size: 0.95rem;
+    position: relative; z-index: 1;
+  }
+  .pricing-footnote a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+  .pricing-footnote a:hover { text-decoration: underline; }
+
+  /* ============ FAQ ============ */
+  .faq-wrap { max-width: 760px; margin: 0 auto; }
+  details.faq-item {
+    background: white; border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px; overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  details.faq-item[open] {
+    border-color: var(--green); box-shadow: var(--shadow-sm);
+  }
+  details.faq-item summary {
+    list-style: none; cursor: pointer;
+    padding: 22px 24px; font-weight: 600;
+    color: var(--ink); display: flex;
+    justify-content: space-between; align-items: center;
+    gap: 16px; font-size: 1.05rem;
+  }
+  details.faq-item summary::-webkit-details-marker { display: none; }
+  .faq-toggle {
+    flex-shrink: 0; width: 28px; height: 28px;
+    background: var(--green-light); color: var(--green-dark);
+    border-radius: 50%; display: grid; place-items: center;
+    font-weight: 800; transition: transform 0.2s;
+  }
+  details[open] .faq-toggle { transform: rotate(45deg); background: var(--green); color: white; }
+  .faq-body { padding: 0 24px 22px; color: var(--ink-soft); line-height: 1.7; }
+
+  /* ============ FINAL CTA ============ */
+  .final-cta { padding: 100px 0; }
+  .cta-box {
+    background: linear-gradient(135deg, var(--green) 0%, #8fc944 100%);
+    border-radius: var(--radius-xl); padding: 64px 48px;
+    text-align: center; color: white;
+    position: relative; overflow: hidden;
+    box-shadow: 0 24px 48px var(--green-glow);
+  }
+  .cta-box::before {
+    content: ""; position: absolute;
+    top: -50%; left: -10%;
+    width: 50%; height: 200%;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.2), transparent 60%);
+    transform: rotate(20deg);
+  }
+  .cta-box::after {
+    content: ""; position: absolute;
+    bottom: -50%; right: -10%;
+    width: 50%; height: 200%;
+    background: radial-gradient(ellipse, rgba(31, 159, 219, 0.3), transparent 60%);
+    transform: rotate(-20deg);
+  }
+  .cta-box h2 {
+    color: white; font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+    margin-bottom: 16px; position: relative; z-index: 1;
+  }
+  .cta-box p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.15rem; margin-bottom: 32px;
+    max-width: 560px; margin-left: auto; margin-right: auto;
+    position: relative; z-index: 1;
+  }
+  .cta-box .btn { position: relative; z-index: 1; }
+  .cta-box .btn-primary { background: white; color: var(--green-dark); }
+  .cta-box .btn-primary:hover { background: var(--ink); color: white; }
+  .cta-note {
+    margin-top: 20px; color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem; position: relative; z-index: 1;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--bg-dark);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 64px 0 32px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+  @media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  .footer-brand p {
+    margin-top: 16px;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 320px; line-height: 1.6; font-size: 0.95rem;
+  }
+  .footer-col h4 {
+    color: white; font-size: 0.9rem;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 18px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 10px; }
+  .footer-col a {
+    color: rgba(255, 255, 255, 0.7); text-decoration: none;
+    font-size: 0.95rem; transition: color 0.15s;
+  }
+  .footer-col a:hover { color: var(--green); }
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.88rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ Reusable Regpack logo (SVG) ============ -->
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+  <defs>
+    <symbol id="google-g" viewBox="0 0 48 48">
+      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/>
+      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
+      <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C40.7 35.5 44 30.2 44 24c0-1.3-.1-2.4-.4-3.5z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo" aria-label="Regpack home">
+      <img src="https://www.regpacks.com/wp-content/themes/regpacknet/images/logo01.png" alt="Regpack">
+    </a>
+    <ul class="nav-links">
+      <li class="has-dropdown">
+        <a href="https://www.regpacks.com/features/">Features<span class="nav-caret"></span></a>
+        <div class="dropdown-panel">
+          <div class="dropdown-heading">
+            <div class="dropdown-heading-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <a href="https://www.regpacks.com/features/">Built to Power<br>Your Process</a>
+          </div>
+          <ul class="dropdown-list">
+            <li><a href="https://www.regpacks.com/online-registration-solution/">Registration &amp; Onboarding</a></li>
+            <li><a href="https://www.regpacks.com/online-payments-software/">Payment Plans &amp; Processing</a></li>
+            <li><a href="https://www.regpacks.com/registration-reporting/">Reporting &amp; Analytics</a></li>
+            <li><a href="https://www.regpacks.com/subscription-management-software/">Subscriptions &amp; Recurring Billing</a></li>
+            <li><a href="https://www.regpacks.com/features/open-api-webhooks/">Open API &amp; Webhooks</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <a href="https://www.regpacks.com/solutions/">Industries<span class="nav-caret"></span></a>
+        <div class="dropdown-panel">
+          <div class="dropdown-heading">
+            <div class="dropdown-heading-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <a href="https://www.regpacks.com/solutions/">Flexible by Design</a>
+          </div>
+          <ul class="dropdown-list">
+            <li><a href="https://www.regpacks.com/camp-registration-software-3/">Camps</a></li>
+            <li><a href="https://www.regpacks.com/church-management-software/">Church</a></li>
+            <li><a href="https://www.regpacks.com/course-registration-software/">Courses</a></li>
+            <li><a href="https://www.regpacks.com/event-registration-software/">Events</a></li>
+            <li><a href="https://www.regpacks.com/event-registration-software-for-nonprofits/">Nonprofit</a></li>
+            <li><a href="https://www.regpacks.com/retreat-registration-software/">Retreats</a></li>
+            <li><a href="https://www.regpacks.com/after-school-registration-software/">Afterschool</a></li>
+            <li><a href="https://www.regpacks.com/sports-registration-software/">Sports</a></li>
+            <li><a href="https://www.regpacks.com/travel-software/">Travel</a></li>
+          </ul>
+        </div>
+      </li>
+      <li><a href="https://www.regpacks.com/pricing/">Pricing</a></li>
+      <li class="has-dropdown">
+        <span class="nav-trigger" tabindex="0">Resources<span class="nav-caret"></span></span>
+        <div class="dropdown-panel">
+          <div class="dropdown-heading">
+            <div class="dropdown-heading-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <a href="https://www.regpacks.com/blog/">Knowledge Hub</a>
+          </div>
+          <ul class="dropdown-list">
+            <li><a href="https://www.regpacks.com/blog/">Blog</a></li>
+            <li><a href="https://www.regpacks.com/testimonials/">Testimonials</a></li>
+            <li><a href="https://www.regpacks.com/features/what-clients-are-saying-about-regpack/">Reviews</a></li>
+            <li><a href="https://api.regpack.com/docs/">API Docs</a></li>
+            <li><a href="https://help.regpack.com/hc/en-us">Regpack Support</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <a href="https://www.regpacks.com/why-regpack/">About Us<span class="nav-caret"></span></a>
+        <div class="dropdown-panel">
+          <div class="dropdown-heading">
+            <div class="dropdown-heading-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <a href="https://www.regpacks.com/why-regpack/">Why Regpack?</a>
+          </div>
+          <ul class="dropdown-list">
+            <li><a href="https://www.regpacks.com/press/">Press Center</a></li>
+            <li><a href="https://www.regpacks.com/about/">Meet the Team</a></li>
+          </ul>
+        </div>
+      </li>
+      <li><a href="https://www.regpack.com/reg/admin/?_ga=2.205516176.1680267375.1778683308-1678666513.1754587890">Login</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="https://www.regpacks.com/request_demo/" class="btn btn-primary">Get a Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        Trusted by NASA, Harvard, Boy Scouts &amp; more
+      </div>
+      <h1 class="hero-title">
+        Registration &amp; payments,<br>
+        <span class="accent">actually automated.</span>
+      </h1>
+      <p class="hero-sub">
+        Stop chasing payments and drowning in spreadsheets. Regpack fills your programs,
+        collects every dollar, and runs your back-office — so you can focus on people, not paperwork.
+      </p>
+      <div class="hero-cta">
+        <a href="#demo" class="btn btn-primary btn-lg">Get a free demo →</a>
+        <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+      </div>
+      <div class="trust-google">
+        <div class="google-g"><svg><use href="#google-g"></use></svg></div>
+        <div>
+          <div class="trust-stars">★★★★<span style="color: #f59e0b;">⯨</span> <span style="color: var(--ink); font-weight: 700;">4.5/5</span></div>
+          <div class="trust-text"><b>153</b> verified Google reviews</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-mock">
+      <div class="float-badge fb1">
+        <div class="badge-icon">✓</div>
+        <div>
+          <div>Payment received</div>
+          <div style="color: var(--muted); font-weight: 400; font-size: 0.78rem;">$1,240 · just now</div>
+        </div>
+      </div>
+      <div class="float-badge fb2">
+        <div class="badge-icon">↑</div>
+        <div>
+          <div>+38% conversions</div>
+          <div style="color: var(--muted); font-weight: 400; font-size: 0.78rem;">vs. last season</div>
+        </div>
+      </div>
+
+      <div class="mock-window">
+        <div class="mock-header">
+          <span class="mock-dot"></span>
+          <span class="mock-dot"></span>
+          <span class="mock-dot"></span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-stats">
+            <div class="stat-card green">
+              <div class="v">$284k</div>
+              <div class="l">Collected</div>
+            </div>
+            <div class="stat-card blue">
+              <div class="v">1,847</div>
+              <div class="l">Registrations</div>
+            </div>
+            <div class="stat-card">
+              <div class="v">96%</div>
+              <div class="l">Completion</div>
+            </div>
+          </div>
+          <div class="mock-row">
+            <div class="mock-user">
+              <div class="mock-avatar">EM</div>
+              <div>
+                <div class="mock-name">Emma Martinez</div>
+                <div class="mock-meta">Summer Camp · 3 sessions</div>
+              </div>
+            </div>
+            <span class="mock-status status-paid">Paid in full</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-user">
+              <div class="mock-avatar" style="background: linear-gradient(135deg, #f59e0b, var(--green));">DR</div>
+              <div>
+                <div class="mock-name">David Rivera</div>
+                <div class="mock-meta">Autopay scheduled · Apr 15</div>
+              </div>
+            </div>
+            <span class="mock-status status-active">Active</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-user">
+              <div class="mock-avatar" style="background: linear-gradient(135deg, var(--blue), #8b5cf6);">SJ</div>
+              <div>
+                <div class="mock-name">Sarah Johnson</div>
+                <div class="mock-meta">Awaiting form completion</div>
+              </div>
+            </div>
+            <span class="mock-status status-pending">Pending</span>
+          </div>
+          <div class="mock-row">
+            <div class="mock-user">
+              <div class="mock-avatar" style="background: linear-gradient(135deg, #ef4444, #f59e0b);">MK</div>
+              <div>
+                <div class="mock-name">Michael Kim</div>
+                <div class="mock-meta">Family of 4 · Auto-billed</div>
+              </div>
+            </div>
+            <span class="mock-status status-paid">Paid in full</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOGOS MARQUEE ============ -->
+<section class="logos">
+  <div class="container">
+    <p class="logos-title">Trusted by 7,000+ leading organizations</p>
+  </div>
+  <div class="logo-marquee">
+    <div class="logo-track">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/NASA.png.webp" alt="NASA">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Harvard-Medical-School.png.webp" alt="Harvard Medical School">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Carnegie-Mellon-University.png.webp" alt="Carnegie Mellon University">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/George_Washington_University_wordmark.png" alt="George Washington University">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Cal-Poly.png.webp" alt="Cal Poly">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/US-Airforce.png" alt="US Airforce">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Boy-Scouts-Logo.png.webp" alt="Boy Scouts">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Boy-and-Girls-Club.png" alt="Boys and Girls Club">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/UNC-Health.png" alt="UNC Health">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Little-Rock-Zoo.png.webp" alt="Little Rock Zoo">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Camp-Sequoia.png.webp" alt="Camp Sequoia">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Camp-Anglewood.png.webp" alt="Camp Anglewood">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Camp-Lookout.png.webp" alt="Camp Lookout">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Mission-Training.png.webp" alt="Mission Training">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Jivamukti-Yoga.png.webp" alt="Jivamukti Yoga">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Young-Judaea.png.webp" alt="Young Judaea">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Western-Museums-Association.png.webp" alt="Western Museums Association">
+      <!-- Duplicate set for seamless infinite scroll -->
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/NASA.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Harvard-Medical-School.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Carnegie-Mellon-University.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/George_Washington_University_wordmark.png" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Cal-Poly.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/US-Airforce.png" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Boy-Scouts-Logo.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Boy-and-Girls-Club.png" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/UNC-Health.png" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Little-Rock-Zoo.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Camp-Sequoia.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Camp-Anglewood.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Camp-Lookout.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Mission-Training.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Jivamukti-Yoga.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Young-Judaea.png.webp" alt="" aria-hidden="true">
+      <img src="https://www.regpacks.com/wp-content/uploads/2024/07/Western-Museums-Association.png.webp" alt="" aria-hidden="true">
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Everything you need</div>
+      <h2>Run your entire program from one platform</h2>
+      <p>Forms, payments, communications, reporting — connected, automated, and built for the way you actually work.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <h3>Smart registration forms</h3>
+        <p>Conditional fields, family flows, group rates. Built to convert — and to capture exactly the data you need without overwhelming applicants.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <h3>Payment automation</h3>
+        <p>Autopay, payment plans, retries, and reconciliation. Stop sending reminder emails — Regpack collects on time, every time.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Trigger workflows</h3>
+        <p>When something changes — a payment, a status, a deadline — Regpack does the next thing automatically. Emails, charges, status updates, all hands-off.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <h3>Built-in communications</h3>
+        <p>Personalized emails, batch updates, automated reminders. Reach every family on autopilot, with the right message at the right time.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>Reports that actually answer</h3>
+        <p>Real-time financials, registration funnels, projections. Export to QuickBooks. Find the answer in seconds, not in a spreadsheet at midnight.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Secure &amp; compliant</h3>
+        <p>PCI-DSS Level 1, SOC 2, GDPR-ready. We handle the security so you don't have to lose sleep over it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPLIT SECTIONS ============ -->
+<section class="section" id="how" style="background: var(--bg-soft);">
+  <div class="container">
+    <div class="split">
+      <div class="split-text">
+        <div class="eyebrow">Collect every payment</div>
+        <h2>Stop chasing money. Start collecting it.</h2>
+        <p>
+          Late payments are the #1 reason program revenue leaks. Regpack auto-charges,
+          auto-retries, and auto-reminds — so your collection rate goes up without anyone lifting a finger.
+        </p>
+        <ul class="check-list">
+          <li><span class="check">✓</span> Auto-charge cards on schedule</li>
+          <li><span class="check">✓</span> Smart retries on declined payments</li>
+          <li><span class="check">✓</span> Payment plans with one-click setup</li>
+          <li><span class="check">✓</span> Native QuickBooks sync</li>
+        </ul>
+        <a href="#demo" class="btn btn-primary">See it in action →</a>
+      </div>
+      <div class="split-visual">
+        <div class="visual-card">
+          <div class="vc-head">
+            <div class="vc-label">Spring Camp · Collections</div>
+            <div class="vc-amount">$184,200 / $192,000</div>
+          </div>
+          <div class="vc-bar"><div class="vc-bar-fill" style="width: 96%;"></div></div>
+          <div style="margin-top: 10px; color: var(--muted); font-size: 0.85rem;">
+            <span class="pulse-dot"></span> 96% collected · auto-billing active
+          </div>
+        </div>
+        <div class="visual-card">
+          <div class="vc-head">
+            <div class="vc-label">Autumn Programs</div>
+            <div class="vc-amount">$72,400 / $98,000</div>
+          </div>
+          <div class="vc-bar"><div class="vc-bar-fill" style="width: 74%;"></div></div>
+          <div style="margin-top: 10px; color: var(--muted); font-size: 0.85rem;">
+            <span class="pulse-dot"></span> 74% collected · 12 retries scheduled
+          </div>
+        </div>
+        <div class="visual-card">
+          <div class="vc-head">
+            <div class="vc-label">Year-Round Memberships</div>
+            <div class="vc-amount">$412,800 / $420,000</div>
+          </div>
+          <div class="vc-bar"><div class="vc-bar-fill" style="width: 98%;"></div></div>
+          <div style="margin-top: 10px; color: var(--muted); font-size: 0.85rem;">
+            <span class="pulse-dot"></span> 98% collected · all autopay
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="split reverse">
+      <div class="split-visual">
+        <div class="visual-card" style="padding: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div style="font-weight: 700; font-size: 1rem;">Trigger: New Registration</div>
+            <span class="mock-status status-active">Active</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="background: var(--green-light); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; color: var(--green-dark); font-weight: 600;">
+              ✓ Send welcome email
+            </div>
+            <div style="text-align: center; color: var(--muted); font-size: 0.8rem;">↓</div>
+            <div style="background: var(--blue-light); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; color: var(--blue-dark); font-weight: 600;">
+              ✓ Charge initial deposit
+            </div>
+            <div style="text-align: center; color: var(--muted); font-size: 0.8rem;">↓</div>
+            <div style="background: var(--bg-soft); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; color: var(--ink-soft); font-weight: 600; border: 1.5px dashed var(--border);">
+              ⏱ Schedule monthly autopay
+            </div>
+            <div style="text-align: center; color: var(--muted); font-size: 0.8rem;">↓</div>
+            <div style="background: var(--bg-soft); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; color: var(--ink-soft); font-weight: 600; border: 1.5px dashed var(--border);">
+              ⏱ Mark status: Active Camper
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="split-text">
+        <div class="eyebrow">Automate everything</div>
+        <h2>If this, then that — for your whole program.</h2>
+        <p>
+          Triggers turn one-off tasks into self-running workflows. When a registration comes in,
+          a payment fails, a deadline passes — Regpack does the next right thing, automatically.
+        </p>
+        <ul class="check-list">
+          <li><span class="check">✓</span> Visual builder, no code required</li>
+          <li><span class="check">✓</span> 60+ trigger conditions out of the box</li>
+          <li><span class="check">✓</span> Branching logic for complex flows</li>
+          <li><span class="check">✓</span> Save 20+ hours per week, every week</li>
+        </ul>
+        <a href="#demo" class="btn btn-primary">Try it free →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS BAND ============ -->
+<section class="stats-band">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-val">$2.4B+</div>
+        <div class="stat-label">Processed annually</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">7,000+</div>
+        <div class="stat-label">Organizations served</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">38%</div>
+        <div class="stat-label">Avg. conversion lift</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">20 hrs</div>
+        <div class="stat-label">Saved per week</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-head">
+      <div class="google-summary">
+        <svg><use href="#google-g"></use></svg>
+        <span class="gs-rating">4.5</span>
+        <span class="gs-stars">★★★★⯨</span>
+        <span class="gs-count">from <b>153</b> Google reviews</span>
+      </div>
+      <h2>Real teams. Real time saved.</h2>
+      <p>Hear from program directors, camp owners, and registrars who got their nights and weekends back.</p>
+    </div>
+    <div class="quote-grid">
+      <div class="quote">
+        <svg class="quote-google"><use href="#google-g"></use></svg>
+        <div class="stars">★★★★★</div>
+        <p>"I use Regpack to manage registrations, emergency information, and more for a youth group. It is extremely personalizable and allows me to do what I need, when I need, in an organized way."</p>
+        <div class="quote-author">
+          <div class="qa-avatar">JK</div>
+          <div>
+            <div class="qa-name">Jason Kay</div>
+            <div class="qa-title">Youth Group Coordinator</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote">
+        <svg class="quote-google"><use href="#google-g"></use></svg>
+        <div class="stars">★★★★★</div>
+        <p>"We've used Regpack for our summer surf camps for years. The ability to create weekly rosters, sales reports, send out group emails — all from one place — is worth every cent. An asset to our business."</p>
+        <div class="quote-author">
+          <div class="qa-avatar" style="background: linear-gradient(135deg, #f59e0b, var(--green));">JS</div>
+          <div>
+            <div class="qa-name">Jason Senn</div>
+            <div class="qa-title">Owner, Endless Summer Surf Camp</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote">
+        <svg class="quote-google"><use href="#google-g"></use></svg>
+        <div class="stars">★★★★★</div>
+        <p>"Regpack has made our convention registration more organized and user-friendly at an affordable cost. Great support and reports. Highly recommended for any small organization."</p>
+        <div class="quote-author">
+          <div class="qa-avatar" style="background: linear-gradient(135deg, var(--blue), #8b5cf6);">SF</div>
+          <div>
+            <div class="qa-name">Summit County Fairgrounds</div>
+            <div class="qa-title">Convention Operations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INDUSTRIES ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Built for your world</div>
+      <h2>Trusted across every kind of program</h2>
+      <p>Regpack adapts to how you run, not the other way around. Pick your fit:</p>
+    </div>
+    <div class="industry-grid">
+      <a href="#" class="industry"><span class="industry-icon">🏕️</span>Camps</a>
+      <a href="#" class="industry"><span class="industry-icon">📚</span>After School</a>
+      <a href="#" class="industry"><span class="industry-icon">⛪</span>Church</a>
+      <a href="#" class="industry"><span class="industry-icon">🎓</span>Courses</a>
+      <a href="#" class="industry"><span class="industry-icon">🎟️</span>Events</a>
+      <a href="#" class="industry"><span class="industry-icon">❤️</span>Nonprofit</a>
+      <a href="#" class="industry"><span class="industry-icon">🏝️</span>Retreats</a>
+      <a href="#" class="industry"><span class="industry-icon">⚽</span>Sports</a>
+      <a href="#" class="industry"><span class="industry-icon">✈️</span>Travel</a>
+      <a href="#" class="industry"><span class="industry-icon">💼</span>Business</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="section pricing-section" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <div class="pricing-banner">
+        <div class="pricing-banner-pill">💳 Payment processing as low as 1.5%</div>
+      </div>
+      <div class="eyebrow">Simple pricing</div>
+      <h2>One platform. Every plan unlimited.</h2>
+      <p>Unlimited projects, users, reports, emails, and forms — on every tier. Pick by features and support level, not by usage caps.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- SMB -->
+      <div class="price-card">
+        <div class="price-tier">SMB</div>
+        <div class="price-amount">
+          <span class="price-currency">$</span>
+          <span class="price-value">400</span>
+        </div>
+        <div class="price-period">per month, paid annually</div>
+        <ul class="price-features">
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Dedicated project consultant</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Dedicated support team access</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Premium features (styling, scheduled emails, packaged products)</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Google SSO</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Unlimited projects, users, reports, emails &amp; forms</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Custom fields &amp; triggers</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Payment dashboard &amp; installment plans</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Calendly integration</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> 10 scheduled emails</li>
+        </ul>
+        <a href="https://www.regpacks.com/request_demo/?package=smb" class="price-cta">Start now</a>
+      </div>
+
+      <!-- MID-MARKET (featured) -->
+      <div class="price-card featured">
+        <div class="price-badge">Most popular</div>
+        <div class="price-tier">Mid-Market</div>
+        <div class="price-amount">
+          <span class="price-currency">$</span>
+          <span class="price-value">600</span>
+        </div>
+        <div class="price-period">per month, paid annually</div>
+        <ul class="price-features">
+          <li class="bold"><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Everything in SMB, plus:</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Additional licenses</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Personal training sessions</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Project consultant on 12 projects</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> SEO/AEO enhancements for your website</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Salesforce, HubSpot &amp; QuickBooks integrations</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Organization-level reporting</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Insider blogs access</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> 50 scheduled emails</li>
+        </ul>
+        <a href="https://www.regpacks.com/request_demo/?package=mid" class="price-cta">Start now</a>
+      </div>
+
+      <!-- ENTERPRISE -->
+      <div class="price-card">
+        <div class="price-tier">Enterprise</div>
+        <div class="price-amount">
+          <span class="price-currency">$</span>
+          <span class="price-value">1,250</span>
+        </div>
+        <div class="price-period">per month, paid annually</div>
+        <ul class="price-features">
+          <li class="bold"><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Everything in Mid-Market, plus:</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Additional licenses</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Project consultant on all builds</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Priority support</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Access to multiple integrations</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Enhanced organization-level reporting</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Emailed financial reports</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Full data migration assistance</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Beta access to upcoming features</li>
+          <li><span class="price-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Unlimited scheduled emails</li>
+        </ul>
+        <a href="https://www.regpacks.com/request_demo/?package=enterprise" class="price-cta">Start now</a>
+      </div>
+    </div>
+
+    <p class="pricing-footnote">
+      Not sure which plan fits? <a href="#demo">Talk to our team →</a> · No setup fees · Cancel anytime
+    </p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq" style="background: var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Common questions</div>
+      <h2>Everything you wanted to ask before a sales call</h2>
+    </div>
+    <div class="faq-wrap">
+      <details class="faq-item" open>
+        <summary>How long does it take to get set up?
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-body">
+          Most organizations are live in under two weeks. Your dedicated onboarding specialist will
+          import your existing data, configure your forms, and walk you through workflows.
+          Smaller programs can go live in days.
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>What does payment processing cost?
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-body">
+          Rates start as low as 1.5% per transaction depending on volume, card mix, and plan tier.
+          You'll get a custom rate breakdown on your demo call — most customers pay less than they did
+          with their previous processor.
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Will it work with the tools we already use?
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-body">
+          Yes. Regpack ships with native QuickBooks, Salesforce, and HubSpot integrations,
+          Stripe and Authorize.Net for payments, Calendly for scheduling, and a full REST API for everything else.
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Is my data safe?
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-body">
+          Regpack is PCI-DSS Level 1 certified (the highest level), SOC 2 Type II audited,
+          and GDPR-compliant. We never touch raw card data — it's tokenized at the source by our payment partners.
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>What happens to my data if I leave?
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-body">
+          You own your data, full stop. Export everything anytime as CSV. We'll even help you migrate to a
+          different platform if it comes to that — but in 12+ years, that's almost never happened.
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I see the platform before deciding?
+          <span class="faq-toggle">+</span>
+        </summary>
+        <div class="faq-body">
+          Absolutely. Book a 30-minute demo and we'll walk you through your exact use case — forms, payments,
+          triggers, reporting — on a live instance. No high-pressure sales, just a working tour.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final-cta" id="demo">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Ready to stop managing registration and start growing your programs?</h2>
+      <p>Get a 30-minute demo tailored to your organization. See exactly how Regpack would work for you — no slideshow, no fluff.</p>
+      <a href="https://www.regpacks.com/request_demo/" class="btn btn-primary btn-lg">Book your free demo →</a>
+      <div class="cta-note">No credit card · No commitment · 30 minutes</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo logo-footer" aria-label="Regpack">
+          <img src="https://www.regpacks.com/wp-content/themes/regpacknet/images/logo01.png" alt="Regpack">
+        </a>
+        <p>Registration and payments software that does the work for you. Built for programs, camps, courses, and the people who run them.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#">Integrations</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Industries</h4>
+        <ul>
+          <li><a href="#">Camps</a></li>
+          <li><a href="#">After School</a></li>
+          <li><a href="#">Nonprofit</a></li>
+          <li><a href="#">Sports</a></li>
+          <li><a href="#">Courses</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#testimonials">Customers</a></li>
+          <li><a href="#">Resources</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 Regpack. All rights reserved.</div>
+      <div>
+        <a href="#" style="color: inherit; text-decoration: none; margin-right: 24px;">Privacy</a>
+        <a href="#" style="color: inherit; text-decoration: none; margin-right: 24px;">Terms</a>
+        <a href="#" style="color: inherit; text-decoration: none;">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
